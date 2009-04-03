@@ -4,7 +4,23 @@
 
 == DESCRIPTION:
 
-FIX (describe your package)
+ReFacebook attempts to be a simple Facebook library for Sinatra.
+
+Usage:
+
+configure do
+  set :facebook_api_key, 'MyApiKey'
+  set :facebook_secret_key, 'MySecretKey'
+end
+
+before do
+  facebook_require_login
+  #facebook_require_install
+end
+
+get '/'
+  body "<h1>Hello #{session[:facebook].user_name} and welcome to refacebook!</h1>"
+end
 
 == FEATURES/PROBLEMS:
 

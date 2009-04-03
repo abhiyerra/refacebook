@@ -1,41 +1,37 @@
-require 'open-uri'
+require 'net/http'
+require 'uri'
 require 'md5'
 
 module ReFacebook
   VERSION = '1.0.0'
 
   APIRestServer = 'http://api.facebook.com/restserver.php'
-
-  @session = nil
+  LoginUrl = "http://www.facebook.com/login.php"
 
   class Session
-    def initialize api_key, secret
+    attr_reader :api_key, :secret, :api
 
-    end
-
-    def api
-
-    end
-  end
-
-  class API
-    def initialize secret
+    def initialize api_key, secret, *args
+      @api_key = api_key
       @secret = secret
+
     end
 
-    def method_missing method, *args
-      request = {}
+    def get_login_url *args
+      params = {}
+      params['v'] = '1.0'
+      params['api_key'] = @api_key
+      params['next'] = args[0][:next]
 
-      args.each {|k,v| request[k.to_s] = v }
+      if args[0][:canvas]
+        params['canvas'] = '1'
+      end
 
-      request['method'] = method.to_s.gsub(/_/, '.')
-      request['v'] = '1.0' unless request['v']
-      request['sig'] = generate_sig request
+      LoginUrl + '?' + params.collect {|k,v| "#{k}=#{v}"}.join('&')
+    end
 
-      # FIXME: Implement.
-      return if request['method'].eql? 'batch.run'
-
-      open(APIRestServer, request).read
+    def get_install_url *args
+      
     end
 
     private
@@ -48,7 +44,29 @@ module ReFacebook
         MD5.hexdigest(request_str.concat(@secret));
       end
   end
-end
 
-fb = ReFacebook.new ''
-puts fb.test_setting :p => 'c', :g => 'd'
+  class API
+    def initialize api_key
+      @api_key = api_key
+    end
+
+    def method_missing method, *args
+      request = {}
+
+      args[0].each {|k,v| request[k.to_s] = v } if args[0]
+
+      request['method'] = method.to_s.gsub(/_/, '.')
+      request['v'] = '1.0' unless request['v']
+      request['format'] = 'json' unless request['json']
+      request['api_key'] = @api_key
+
+      request['sig'] = generate_sig(request.sort)
+
+      # FIXME: Implement.
+      return if request['method'].eql? 'batch.run'
+
+      res = Net::HTTP.post_form(URI.parse(APIRestServer), request)
+      res.body
+    end
+  end
+end
