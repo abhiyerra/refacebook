@@ -1,12 +1,26 @@
 require 'net/http'
 require 'uri'
 require 'md5'
+require 'json'
 
 module ReFacebook
   VERSION = '1.0.0'
 
   APIRestServer = 'http://api.facebook.com/restserver.php'
   LoginUrl = "http://www.facebook.com/login.php"
+
+  def self.get_login_url *args
+    params = {}
+    params['v'] = '1.0'
+    params['api_key'] = @api_key
+    params['next'] = args[0][:next]
+
+    if args[0][:canvas]
+      params['canvas'] = '1'
+    end
+
+    LoginUrl + '?' + params.collect {|k,v| "#{k}=#{v}"}.join('&')
+  end
 
   class Session
     attr_reader :api_key, :secret, :api
@@ -15,31 +29,16 @@ module ReFacebook
       @api_key = api_key
       @secret = secret
       @api = API.new(api_key)
-      @session = {}
+      @session = nil
     end
 
     def create_session auth_token
-      @api.auth_getSession :auth_token => auth_token
+      @session = @api.auth_getSession :auth_token => auth_token
     end
 
-    def get_login_url *args
-      params = {}
-      params['v'] = '1.0'
-      params['api_key'] = @api_key
-      params['next'] = args[0][:next]
-
-      if args[0][:canvas]
-        params['canvas'] = '1'
-      end
-
-      LoginUrl + '?' + params.collect {|k,v| "#{k}=#{v}"}.join('&')
-    end
-
-    def get_install_url *args
-      
-    end
 
     private
+
       # args = array of args to the request, not counting sig, formatted in non-urlencoded arg=val pairs
       # sorted_array = alphabetically_sort_array_by_keys(args);
       # request_str = concatenate_in_order(sorted_array);
@@ -70,8 +69,7 @@ module ReFacebook
       # FIXME: Implement.
       return if request['method'].eql? 'batch.run'
 
-      res = Net::HTTP.post_form(URI.parse(APIRestServer), request)
-      res.body
+      JSON.parse(Net::HTTP.post_form(URI.parse(APIRestServer), request))
     end
   end
 end
