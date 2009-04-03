@@ -28,8 +28,11 @@ before do
 end
 
 post '/' do
+  body params.collect {|k,v| "#{k} = #{v}<br/>" }
+end
+
+post '/require_login' do
   fbml_redirect ReFacebook.get_login_url(:next => options.facebook_canvas_url + request.fullpath, :canvas => true)
-#  body params.collect {|k,v| "#{k} = #{v}<br/>" }
 end
 
 post '/test/2' do

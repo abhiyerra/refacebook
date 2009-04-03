@@ -22,6 +22,10 @@ module ReFacebook
     LoginUrl + '?' + params.collect {|k,v| "#{k}=#{v}"}.join('&')
   end
 
+  def new_session auth_token
+    @session = @api.auth_getSession :auth_token => auth_token
+  end
+
   class Session
     attr_reader :api_key, :secret, :api
 
@@ -32,13 +36,7 @@ module ReFacebook
       @session = nil
     end
 
-    def create_session auth_token
-      @session = @api.auth_getSession :auth_token => auth_token
-    end
-
-
     private
-
       # args = array of args to the request, not counting sig, formatted in non-urlencoded arg=val pairs
       # sorted_array = alphabetically_sort_array_by_keys(args);
       # request_str = concatenate_in_order(sorted_array);
