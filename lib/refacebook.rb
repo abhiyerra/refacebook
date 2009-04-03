@@ -14,7 +14,12 @@ module ReFacebook
     def initialize api_key, secret, *args
       @api_key = api_key
       @secret = secret
+      @api = API.new(api_key)
+      @session = {}
+    end
 
+    def create_session auth_token
+      @api.auth_getSession :auth_token => auth_token
     end
 
     def get_login_url *args
