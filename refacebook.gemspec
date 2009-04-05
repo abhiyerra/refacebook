@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.authors = ["Abhi Yerra"]
   s.description = %q{ReFacebook is a simple, small facebook library tailored toward usage with Sinatra.}
   s.email = "abhi@traytwo.com"
-  s.files = FileList['lib/**/*.rb', 'bin/*', '[A-Z]*', 'test/**/*'].to_a
+  s.files = FileList['lib/**/*.rb', 'bin/*', '[A-Z]*', 'test/**/*', 'examples/**/*'].to_a
   s.has_rdoc = true
   s.homepage = "http://github.com/abhiyerra/refacebook"
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
