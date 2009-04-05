@@ -14,6 +14,8 @@ Problems:
 * Need helpers to make life easier.
 * Session needs to be stored so we can keep state without constantly recreating the ReFacebook::Session.
 * Need to add a way to keep the api session key stored.
+* Have a better example application with fbml, api, and all that good stuff.
+* Test with ruby 1.9, remove json dep if 1.9 since json is included.
 
 == SYNOPSIS:
 
