@@ -14,9 +14,6 @@ Problems:
 * Need helpers to make life easier.
 * Session needs to be stored so we can keep state without constantly recreating the ReFacebook::Session.
 * Need to add a way to keep the api session key stored.
-* Currently everything is a POST request since facebook sends a post request even if it is a get request
-  to the actual app. Need to modify rack so when a "fb_sig_request_method = GET" param is received that
-  we convert the actual request to GET request. 
 
 == SYNOPSIS:
 
