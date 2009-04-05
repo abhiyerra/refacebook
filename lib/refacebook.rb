@@ -4,8 +4,6 @@ require 'md5'
 require 'json'
 
 module ReFacebook
-  VERSION = '1.0.0'
-
   APIRestServer = 'http://api.facebook.com/restserver.php'
   LoginUrl = "http://www.facebook.com/login.php"
 
