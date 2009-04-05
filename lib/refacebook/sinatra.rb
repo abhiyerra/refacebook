@@ -7,6 +7,10 @@ module Sinatra
     def require_facebook *args
       settings = args[0]
 
+      configure do
+        set :canvas_url, settings[:canvas_url]
+      end
+
       before do 
         # Passes the request to the correct request method since canvas requests
         # come in as POSTs.
@@ -16,10 +20,16 @@ module Sinatra
         @fbsession = ReFacebook::Session.new(settings[:api_key], settings[:secret_key])
 
         if settings[:require_login] and !params['fb_sig_session_key']
-          halt fbml_redirect(@fbsession.get_login_url(:next => settings[:canvas_url] + request.fullpath,
+          halt fbml_redirect(@fbsession.get_login_url(:next => link_from_canvas(request.fullpath),
                                                       :canvas => true))
         end
       end
+    end
+
+    # Return a url with the canvas as the host.
+    def link_from_canvas(path="")
+      path = path.empty? ? "" : "/#{path}"
+      "#{self.canvas_url}#{path}"
     end
 
     def fbml_redirect(url)
