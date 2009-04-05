@@ -65,7 +65,7 @@ module ReFacebook
       return if request['method'].eql? 'batch.run'
   
       req = Net::HTTP.post_form(URI.parse(APIRestServer), request)
-      req.body
+      JSON.parse("[#{req.body}]")
     end
 
     private
@@ -79,7 +79,3 @@ module ReFacebook
       end
   end
 end
-
-fb = ReFacebook::Session.new '2a7a86cd4ea39bb7ea4eaabb938acb86', '662361041ddcb4b3f7df0f4b092249ee'
-puts fb.api.auth_createToken
-
