@@ -3,8 +3,8 @@ require 'refacebook'
 
 module Sinatra
   module ReFacebook
-    def fbml_redirect url
-      body "<fb:redirect url=\"#{url}\" />"
+    def fbml_redirect(url)
+      "<fb:redirect url=\"#{url}\" />"
     end
   end
 

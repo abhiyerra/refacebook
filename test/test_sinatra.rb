@@ -20,8 +20,8 @@ before do
   @fbsession = ReFacebook::Session.new(options.facebook_api_key, options.facebook_secret_key)
 
   if params[:auth_token]
-    @fbsession.create_session params[:auth_token]
-    puts @fbsession.session['uid']
+    @fbsession.auth_session params[:auth_token]
+    puts @fbsession.session
   else
   end
 
@@ -31,8 +31,10 @@ post '/' do
   body params.collect {|k,v| "#{k} = #{v}<br/>" }
 end
 
+
 post '/require_login' do
-  fbml_redirect ReFacebook.get_login_url(:next => options.facebook_canvas_url + request.fullpath, :canvas => true)
+  params.each {|k,v| puts "#{k} = #{v}" }
+  body fbml_redirect(@fbsession.get_login_url(:next => options.facebook_canvas_url + request.fullpath, :canvas => true))
 end
 
 post '/test/2' do
