@@ -15,7 +15,7 @@ module Sinatra
     end
 
     def fbml_redirect(url)
-      "<fb:redirect url=\"#{url}\" />"
+      halt "<fb:redirect url=\"#{url}\" />"
     end
   end
 
@@ -36,8 +36,8 @@ module Sinatra
         @fbsession = ReFacebook::Session.new(settings[:api_key], settings[:secret_key])
 
         if settings[:require_login] and !params['fb_sig_session_key']
-          halt fbml_redirect(@fbsession.get_login_url(:next => link_from_canvas(request.fullpath),
-                                                      :canvas => true))
+          fbml_redirect(@fbsession.get_login_url(:next => link_from_canvas(request.fullpath),
+                                                 :canvas => true))
         end
       end
     end
