@@ -4,6 +4,22 @@ require 'refacebook'
 
 module Sinatra
   module ReFacebookHelper
+    def in_canvas?
+      params["fb_sig_in_canvas"].eql? "1"
+    end
+
+    # Return a url prefixed with the canvas url with a path given as an argument.
+    def link_from_canvas(path="")
+      path = (path.empty? || path.eql?("/")) ? "" : "/#{path}"
+      "#{options.canvas_url}#{path}"
+    end
+
+    def fbml_redirect(url)
+      "<fb:redirect url=\"#{url}\" />"
+    end
+  end
+
+  module ReFacebookRegister
     def require_facebook *args
       settings = args[0]
 
@@ -25,17 +41,8 @@ module Sinatra
         end
       end
     end
-
-    # Return a url with the canvas as the host.
-    def link_from_canvas(path="")
-      path = path.empty? ? "" : "/#{path}"
-      "#{self.canvas_url}#{path}"
-    end
-
-    def fbml_redirect(url)
-      "<fb:redirect url=\"#{url}\" />"
-    end
   end
 
-  register ReFacebookHelper
+  helpers ReFacebookHelper
+  register ReFacebookRegister
 end

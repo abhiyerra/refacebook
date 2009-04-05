@@ -16,18 +16,18 @@ get '/' do
   body params.collect {|k,v| "#{k} = #{v}<br/>" }
 end
 
-get '/postorget' do
-  body "get"
-end
-
-post '/postorget' do
-  body "post"
-end
-
 get '/require_login' do
   params.each {|k,v| puts "#{k} = #{v}" }
 end
 
-get '/test/2' do
-  request.fullpath
+get '/link_from_canvas' do
+  body link_from_canvas(request.fullpath)
+end
+
+get '/in_canvas' do
+  if in_canvas?
+    body "yes"
+  else
+    body "no"
+  end
 end

@@ -7,15 +7,19 @@
 ReFacebook is a small facebook library tailored toward usage with Sinatra.
 Currently it works with fbml as that seems to be the easiest route to go.
 
-== FEATURES/PROBLEMS:
+== TODO:
 
-Problems:
 * Need to document the code.
 * Need helpers to make life easier.
 * Session needs to be stored so we can keep state without constantly recreating the ReFacebook::Session.
+  The way fbml works there is no way to keep a cookie session since the fbml passes through facebook
+  first. Also there are no file/memcache based stores that don't require a cookie on rack right now,
+  so the best way would be to reimplement a @fbsession that would have its own storage mechanism
+  until one is implemented in rack or sinatra.
 * Need to add a way to keep the api session key stored.
 * Have a better example application with fbml, api, and all that good stuff.
 * Test with ruby 1.9, remove json dep if 1.9 since json is included.
+
 
 == SYNOPSIS:
 
