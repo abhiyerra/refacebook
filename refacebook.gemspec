@@ -4,7 +4,7 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name = "refacebook"
-  s.version = "0.2"
+  s.version = "0.2.1"
 
   s.authors = ["Abhi Yerra"]
   s.description = %q{ReFacebook is a small facebook library tailored toward usage with Sinatra.}
