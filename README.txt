@@ -1,42 +1,34 @@
 = refacebook
 
-* FIX (url)
+* http://github.com/abhiyerra/refacebook/
 
 == DESCRIPTION:
 
-ReFacebook attempts to be a simple Facebook library for Sinatra.
-
-Usage:
-
-configure do
-  set :facebook_api_key, 'MyApiKey'
-  set :facebook_secret_key, 'MySecretKey'
-end
-
-before do
-  facebook_require_login
-  #facebook_require_install
-end
-
-get '/'
-  body "<h1>Hello #{session[:facebook].user_name} and welcome to refacebook!</h1>"
-end
+ReFacebook is a small facebook library tailored toward usage with Sinatra.
+Currently it works with fbml as that seems to be the easiest route to go.
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+Problems:
+* Need to document the code.
+* Need helpers to make life easier.
+* Session needs to be stored so we can keep state without constantly recreating the ReFacebook::Session.
+* Currently everything is a POST request since facebook sends a post request even if it is a get request
+  to the actual app. Need to modify rack so when a "fb_sig_request_method = GET" param is received that
+  we convert the actual request to GET request. 
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+To see how to use the library please look at examples/example.rb
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* Need json library.
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+gem sources -a http://gems.github.com
+sudo gem install abhiyerra-refacebook
 
 == LICENSE:
 
