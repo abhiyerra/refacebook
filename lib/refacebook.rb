@@ -23,34 +23,38 @@ module ReFacebook
       end
     end
 
-    def self.create api_key, secret, args
+    # FIXME: Currently the store is relying on the idea that we have a memcache
+    #        store. Abstract this so that it uses rack/session/abstract/id.
+    def self.create api_key, secret, params, *args
+      store = args[0][:store]
+      unless store
+        # TODO: Exception or error.
+      end
+      
       session = nil
 
-      if args['fb_sig_session_key']
-        if args['auth_token']
+      if params['fb_sig_session_key']
+        if params['auth_token']
           # Brand new sesion since token is given.
           session = new(api_key, secret)
+          session.auth params['auth_token']
         else
           # Session exists. Find it
-          session = nil# args['fb_sig_session_key']
-
+          session = store.get(params['fb_sig_session_key'])
           session = new(api_key, secret) if session.nil?
         end
 
-          # if( isset($_REQUEST[$prefix.'_session_key']) ){
-          #    session_name( $_REQUEST[$prefix.'_session_key'] );
-          #    session_start();
-          #
-        puts session
+        session.user = params['fb_sig_user']
+        session.friends = params['fb_sig_friends'].split(',')
 
-        session.user = args['fb_sig_user']
-        session.friends = args['fb_sig_friends'].split(',')
+        session.session_key = params['fb_sig_session_key']
+        session.expires = params['fb_sig_expires']
+        session.time = params['fb_sig_time']
 
-        session.session_key = args['fb_sig_session_key']
-        session.expires = args['fb_sig_expires']
-        session.time = args['fb_sig_time']
+        session.profile_update_time = params['fb_sig_profile_update_time']
 
-        session.profile_update_time = args['fb_sig_profile_update_time']
+        expiry = session.expires.to_i - session.time.to_i
+        store.set(params['fb_sig_session_key'], session, expiry)
       else
         # Just return a session, even if it's not a lasting session.
         session = new(api_key, secret)
@@ -72,7 +76,7 @@ module ReFacebook
       LoginUrl + '?' + params.collect {|k,v| "#{k}=#{v}"}.join('&')
     end
 
-    def auth_session auth_token
+    def auth auth_token
       @session = JSON.parse(@api.auth_getSession(:auth_token => auth_token))
     end
   end
