@@ -4,8 +4,7 @@
 
 == DESCRIPTION:
 
-ReFacebook is a small facebook library tailored toward usage with Sinatra.
-Currently it works with fbml as that seems to be the easiest route to go.
+ReFacebook is a facebook library and Sinatra extension.
 
 == TODO:
 
