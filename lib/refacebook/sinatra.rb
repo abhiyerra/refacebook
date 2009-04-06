@@ -33,7 +33,7 @@ module Sinatra
         request.env['REQUEST_METHOD'] = 'GET' if params["fb_sig_in_canvas"].eql? "1" \
                                              and params["fb_sig_request_method"].eql? "GET"
 
-        @fbsession = ReFacebook::Session.new(settings[:api_key], settings[:secret_key])
+        @fbsession = ReFacebook::Session.create(settings[:api_key], settings[:secret_key], params)
 
         if settings[:require_login] and !params['fb_sig_session_key']
           fbml_redirect(@fbsession.get_login_url(:next => link_from_canvas(request.fullpath),
