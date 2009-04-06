@@ -18,4 +18,5 @@ Gem::Specification.new do |s|
   s.summary = "ReFacebook is a small facebook library tailored toward usage with Sinatra."
 
   s.add_dependency("json", [">= 1.1.4"])
+  s.add_dependency("memcache-client", [">= 1.7.1"])
 end
