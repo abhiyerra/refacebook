@@ -14,7 +14,9 @@ Currently it works with fbml as that seems to be the easiest route to go.
 * Abstract the session store so it's not reliant on the set and get. Also,
   remove the :store option eventually since that seems like a copout method
   and doesn't add simplicity. 
+* Make the api spit out an exception if call returns error.
 * Have a better example application with fbml, api, and all that good stuff.
+* Write unit tests
 * Test with ruby 1.9, remove json dep if 1.9 since json is included.
 
 

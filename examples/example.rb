@@ -6,8 +6,6 @@ require 'refacebook'
 require 'refacebook/sinatra'
 require 'memcache'
 
-enable :sessions
-
 store = MemCache.new 'localhost:11211'
 
 require_facebook(:api_key =>'2a7a86cd4ea39bb7ea4eaabb938acb86',
@@ -20,12 +18,8 @@ get '/' do
   body params.collect {|k,v| "#{k} = #{v}<br/>" }
 end
 
-get '/require_login' do
-  params.each {|k,v| puts "#{k} = #{v}" }
-end
-
 get '/link_from_canvas' do
-  body link_from_canvas(request.fullpath)
+  body link_from_canvas("in_canvas")
 end
 
 get '/in_canvas' do
