@@ -34,20 +34,16 @@ module ReFacebook
       session = nil
 
       if params['fb_sig_session_key']
-        if params['auth_token']
-          # Brand new sesion since token is given.
-          session = new(api_key, secret)
-          session.auth params['auth_token']
-        else
-          # Session exists. Find it
-          session = store.get(params['fb_sig_session_key'])
-          session = new(api_key, secret) if session.nil?
-        end
+        # TODO: Maybe we can only reset the items that need to be reset,
+        #       since I doubt that all of these change all the time.
+        session = store.get(params['fb_sig_session_key'])
+        session = new(api_key, secret) if session.nil?
 
         session.user = params['fb_sig_user']
         session.friends = params['fb_sig_friends'].split(',')
 
         session.session_key = params['fb_sig_session_key']
+
         session.expires = params['fb_sig_expires']
         session.time = params['fb_sig_time']
 
@@ -76,15 +72,18 @@ module ReFacebook
       LoginUrl + '?' + params.collect {|k,v| "#{k}=#{v}"}.join('&')
     end
 
-    def auth auth_token
-      @session = JSON.parse(@api.auth_getSession(:auth_token => auth_token))
+    def session_key=(session_key)
+      @session_key = @api.session_key = session_key
     end
   end
 
   class API
+    attr_accessor :session_key
+
     def initialize api_key, secret
       @api_key = api_key
       @secret = secret
+      @session_key = nil
     end
 
     def method_missing method, *args
@@ -95,6 +94,7 @@ module ReFacebook
       request['api_key'] = @api_key
       request['format'] = 'json' unless request['json']
       request['method'] = method.to_s.gsub(/_/, '.')
+      request['session_key'] = @session_key if @session
       request['v'] = '1.0' unless request['v']
 
       request['sig'] = generate_sig(request.sort)
