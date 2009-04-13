@@ -24,7 +24,7 @@ module ReFacebook
       end
     end
 
-    def update params
+    def update_session_params params
       @user = params['fb_sig_user']
       @friends = params['fb_sig_friends'].split(',')
 
