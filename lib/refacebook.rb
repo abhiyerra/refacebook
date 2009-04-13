@@ -3,9 +3,8 @@ require 'uri'
 require 'md5'
 require 'json'
 
+# ReFacebook the main store for a facebook session.
 module ReFacebook
-  VERSION = "0.3.2"
-
   APIRestServer = "http://api.facebook.com/restserver.php"
   LoginUrl = "http://www.facebook.com/login.php"
 
@@ -25,40 +24,16 @@ module ReFacebook
       end
     end
 
-    # FIXME: Currently the store is relying on the idea that we have a memcache
-    #        store. Abstract this so that it uses rack/session/abstract/id.
-    def self.create api_key, secret, params, *args
-      store = args[0][:store]
-      unless store
-        # TODO: Exception or error.
-      end
-      
-      session = nil
+    def update params
+      @user = params['fb_sig_user']
+      @friends = params['fb_sig_friends'].split(',')
 
-      if params['fb_sig_session_key']
-        # TODO: Maybe we can only reset the items that need to be reset,
-        #       since I doubt that all of these change all the time.
-        session = store.get(params['fb_sig_session_key'])
-        session = new(api_key, secret) if session.nil?
+      @session_key = params['fb_sig_session_key']
 
-        session.user = params['fb_sig_user']
-        session.friends = params['fb_sig_friends'].split(',')
+      @expires = params['fb_sig_expires']
+      @time = params['fb_sig_time']
 
-        session.session_key = params['fb_sig_session_key']
-
-        session.expires = params['fb_sig_expires']
-        session.time = params['fb_sig_time']
-
-        session.profile_update_time = params['fb_sig_profile_update_time']
-
-        expiry = session.expires.to_i - session.time.to_i
-        store.set(params['fb_sig_session_key'], session, expiry)
-      else
-        # Just return a session, even if it's not a lasting session.
-        session = new(api_key, secret)
-      end
-
-      session
+      @profile_update_time = params['fb_sig_profile_update_time']
     end
 
     def get_login_url *args
