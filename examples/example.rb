@@ -6,6 +6,8 @@ require 'refacebook'
 require 'refacebook/sinatra'
 require 'memcache'
 
+set :port, 3000
+
 store = MemCache.new 'localhost:11211'
 
 require_facebook(:api_key =>'2a7a86cd4ea39bb7ea4eaabb938acb86',
