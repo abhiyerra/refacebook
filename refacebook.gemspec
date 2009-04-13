@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/abhiyerra/refacebook}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.rubyforge_project = %q{refacebook}
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{ReFacebook is a facebook library and Sinatra extension.}
   s.test_files = [
