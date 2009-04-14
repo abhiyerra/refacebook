@@ -8,8 +8,7 @@ ReFacebook is a facebook library and Sinatra extension.
 
 == TODO:
 
-* Need to document the code.
-* Need helpers to make life easier.
+* Need more helpers to make life easier.
 * Have a better example application with fbml, api, and all that good stuff.
 * Test with ruby 1.9, remove json dep if 1.9 since json is included.
 

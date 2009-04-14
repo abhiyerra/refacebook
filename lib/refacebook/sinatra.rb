@@ -3,22 +3,44 @@ require 'refacebook'
 
 module Sinatra
   module ReFacebookHelper
+    # If in the facebook canvas returns true
     def in_canvas?
       params["fb_sig_in_canvas"].eql? "1"
     end
 
-    # Return a url prefixed with the canvas url with a path given as an argument.
+    # Return a concatenated url with the canvas url and the path
     def link_from_canvas(path="")
       path = (path.empty? || path.eql?("/")) ? "" : "/#{path}"
       "#{options.canvas_url}#{path}"
     end
 
+    # Since redirect doesn't work in the canvas since it relies
+    # on JavaScript Location field. This is a replacement which
+    # uses fbml as a means to redirect to the given url.
     def fbml_redirect(url)
       halt "<fb:redirect url=\"#{url}\" />"
     end
   end
 
   module ReFacebookRegister
+    # ReFacebook configuration done at the beginning of a Sinatra file.
+    #
+    # An exaple:
+    # <pre><code>
+    # require_facebook(:api_key =>'MY_API_KEY',
+    #                  :secret_key => 'MY_SECRET_KEY',
+    #                  :canvas_url => 'http://apps.facebook.com/canvas-page',
+    #                  :require_login => true,
+    #                  :store => store)
+    # </code></pre>
+    #
+    # :api_key - Your application's Facebook API key.
+    # :secret_key - Your application's Facebook Secret key.
+    # :canvas_url - The full path to your canvas page.
+    # :require_login - If this is set to true then the user is redirected to
+    #   the login page where she needs to authenticate.
+    # :store - This currently uses memcache-client as the session store since
+    #   Rack doesn't currently have non cookie based session stores.
     def require_facebook *args
       settings = args[0]
 

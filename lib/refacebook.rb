@@ -3,17 +3,19 @@ require 'uri'
 require 'md5'
 require 'json'
 
-# ReFacebook the main store for a facebook session.
 module ReFacebook
   APIRestServer = "http://api.facebook.com/restserver.php"
   LoginUrl = "http://www.facebook.com/login.php"
 
+  # ReFacebook::Session is the main store for a facebook session.
   class Session
     attr_reader :api_key, :secret, :api
 
-    attr_accessor :user, :friends, :session_key, 
-                  :expires, :time, :profile_update_time
+    attr_reader :user, :friends, :session_key, 
+                :expires, :time, :profile_update_time
 
+    # Create a new session.
+    # api_key and secret are the Facebook API and Secret keys.
     def initialize api_key, secret
       @api_key = api_key
       @secret = secret
@@ -24,6 +26,8 @@ module ReFacebook
       end
     end
 
+    # Update the session variables based on the values that
+    # are sent in from the facebook parameters.
     def update_session_params params
       @user = params['fb_sig_user']
       @friends = params['fb_sig_friends'].split(',')
@@ -36,6 +40,10 @@ module ReFacebook
       @profile_update_time = params['fb_sig_profile_update_time']
     end
 
+    # Generate a redirect path to the default login page.
+    # :next - The page to redirect to after login.
+    # Optional:
+    #   :canvas - If this is true redirects to the canvas page.
     def get_login_url *args
       params = {}
       params['v'] = '1.0'
@@ -49,21 +57,38 @@ module ReFacebook
       LoginUrl + '?' + params.collect {|k,v| "#{k}=#{v}"}.join('&')
     end
 
-    def session_key=(session_key)
-      @session_key = @api.session_key = session_key
-    end
+    protected
+      # If the session_key changes update the API's session key as well.
+      def session_key=(session_key)
+        @session_key = @api.session_key = session_key
+      end
   end
 
+  # All <a href="http://wiki.developers.facebook.com/index.php/API">API</a> calls go 
+  # through this class. To request a method just modify the call such that . become _.
+  # If you create a session update the session_key with the session value so that
+  # all the calls become authenticated.
+  #
+  # Example calls:
+  # <pre><code>
+  #  # This is without a parameter
+  #  @api = API.new 'MY_API_KEY, 'MY_SECRET_KEY'
+  #  token = @api.auth_createToken
+  #  # This is with a parameter
+  #  app_properties = @api.admin_getAppProperties :properties => ['application_name','callback_url']
+  # </pre></code>
   class API
     attr_accessor :session_key
 
+    # Create a new API.
+    # api_key and secret are the Facebook API and Secret keys.
     def initialize api_key, secret
       @api_key = api_key
       @secret = secret
       @session_key = nil
     end
 
-    # FIXME: Implement.
+    # FIXME: This is not implemented yet. It is just a placeholder.
     def batch_run *args
       raise 
     end
