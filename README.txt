@@ -1,5 +1,6 @@
 = refacebook
 
+* http://refacebook.rubyforge.org
 * http://github.com/abhiyerra/refacebook/
 
 == DESCRIPTION:
