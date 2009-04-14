@@ -25,22 +25,20 @@ module Sinatra
   module ReFacebookRegister
     # ReFacebook configuration done at the beginning of a Sinatra file.
     #
-    # An exaple:
-    # <pre><code>
-    # require_facebook(:api_key =>'MY_API_KEY',
-    #                  :secret_key => 'MY_SECRET_KEY',
-    #                  :canvas_url => 'http://apps.facebook.com/canvas-page',
-    #                  :require_login => true,
-    #                  :store => store)
-    # </code></pre>
+    # An example:
+    #   require_facebook(:api_key =>'MY_API_KEY',
+    #                    :secret_key => 'MY_SECRET_KEY',
+    #                    :canvas_url => 'http://apps.facebook.com/canvas-page',
+    #                    :require_login => true,
+    #                    :store => store)
     #
     # [:api_key] Your application's Facebook API key.
     # [:secret_key] Your application's Facebook Secret key.
     # [:canvas_url] The full path to your canvas page.
     # [:require_login] If this is set to true then the user is redirected to
-    #   the login page where she needs to authenticate.
+    # the login page where she needs to authenticate.
     # [:store] This currently uses memcache-client as the session store since
-    #   Rack doesn't currently have non cookie based session stores.
+    # Rack doesn't currently have non cookie based session stores.
     def require_facebook *args
       settings = args[0]
 
