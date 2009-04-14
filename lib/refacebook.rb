@@ -41,9 +41,8 @@ module ReFacebook
     end
 
     # Generate a redirect path to the default login page.
-    # :next - The page to redirect to after login.
-    # Optional:
-    #   :canvas - If this is true redirects to the canvas page.
+    # [:next] The page to redirect to after login.
+    # [:canvas] _Optional._ If this is true redirects to the canvas page.
     def get_login_url *args
       params = {}
       params['v'] = '1.0'
@@ -64,7 +63,7 @@ module ReFacebook
       end
   end
 
-  # All <a href="http://wiki.developers.facebook.com/index.php/API">API</a> calls go 
+  # All API[http://wiki.developers.facebook.com/index.php/API] calls go 
   # through this class. To request a method just modify the call such that . become _.
   # If you create a session update the session_key with the session value so that
   # all the calls become authenticated.
