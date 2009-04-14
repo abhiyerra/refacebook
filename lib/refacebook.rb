@@ -63,24 +63,34 @@ module ReFacebook
       @session_key = nil
     end
 
+    # FIXME: Implement.
+    def batch_run *args
+      raise 
+    end
+
     def method_missing method, *args
       request = {}
 
-      args[0].each {|k,v| request[k.to_s] = v } if args[0]
+      args[0].each do |k,v| 
+        request[k.to_s] = v.kind_of?(Array) ? v.to_json : v
+      end if args[0]
 
       request['api_key'] = @api_key
-      request['format'] = 'json' unless request['json']
+      request['format'] = 'json' unless request['format']
       request['method'] = method.to_s.gsub(/_/, '.')
-      request['session_key'] = @session_key if @session
+      request['session_key'] = @session_key if @session_key
       request['v'] = '1.0' unless request['v']
 
       request['sig'] = generate_sig(request.sort)
 
-      # FIXME: Implement.
-      return if request['method'].eql? 'batch.run'
-  
       req = Net::HTTP.post_form(URI.parse(APIRestServer), request)
-      JSON.parse("[#{req.body}]")
+      ret = JSON.parse("[#{req.body}]")[0]
+
+      if ret.class == Hash && ret.has_key?('error_code')
+        raise APIError.new(ret), ret['error_msg']
+      end
+
+      ret
     end
 
     private
@@ -92,5 +102,14 @@ module ReFacebook
         request_str = args.collect { |k,v| "#{k}=#{v}" }.join ''
         MD5.hexdigest(request_str.concat(@secret));
       end
+  end
+
+  class APIError < StandardError
+    attr_reader :error_code, :error_msg
+
+    def initialize(response)
+      @error_code = response['error_code']
+      @error_msg = response['error_msg']
+    end
   end
 end

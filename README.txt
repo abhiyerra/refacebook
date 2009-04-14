@@ -10,14 +10,8 @@ ReFacebook is a facebook library and Sinatra extension.
 
 * Need to document the code.
 * Need helpers to make life easier.
-* Abstract the session store so it's not reliant on the set and get. Also,
-  remove the :store option eventually since that seems like a copout method
-  and doesn't add simplicity. 
-* Make the api spit out an exception if call returns error.
 * Have a better example application with fbml, api, and all that good stuff.
-* Write unit tests
 * Test with ruby 1.9, remove json dep if 1.9 since json is included.
-
 
 == SYNOPSIS:
 
@@ -26,7 +20,7 @@ To see how to use the library please look at examples/example.rb
 == REQUIREMENTS:
 
 RubyGems
-* json
+* json or json-jruby
 * memcache-client
 
 == INSTALL:
