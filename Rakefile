@@ -2,7 +2,6 @@
 
 require 'rubygems'
 require 'rake/rdoctask'
-require './lib/refacebook.rb'
 
 begin
   require 'jeweler'

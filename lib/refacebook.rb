@@ -1,6 +1,7 @@
 require 'net/http'
 require 'uri'
 require 'md5'
+require 'cgi'
 require 'json'
 
 module ReFacebook
@@ -68,14 +69,12 @@ module ReFacebook
   # If you create a session update the session_key with the session value so that
   # all the calls become authenticated.
   #
-  # Example calls:
-  # <pre><code>
-  #  # This is without a parameter
-  #  @api = API.new 'MY_API_KEY, 'MY_SECRET_KEY'
-  #  token = @api.auth_createToken
-  #  # This is with a parameter
-  #  app_properties = @api.admin_getAppProperties :properties => ['application_name','callback_url']
-  # </pre></code>
+  # Example code:
+  #   # This is without a parameter
+  #   @api = API.new 'MY_API_KEY, 'MY_SECRET_KEY'
+  #   token = @api.auth_createToken
+  #   # This is with a parameter
+  #   app_properties = @api.admin_getAppProperties :properties => ['application_name','callback_url']
   class API
     attr_accessor :session_key
 
@@ -85,18 +84,49 @@ module ReFacebook
       @api_key = api_key
       @secret = secret
       @session_key = nil
+
+      # For batch operations.
+      @in_batch = false
+      @method_feed = []
     end
 
-    # FIXME: This is not implemented yet. It is just a placeholder.
-    def batch_run *args
-      raise 
+    # Run a batch call to the API. This doesn't return a APIError if there are
+    # errors since some of the calls could have valid responses. Please catch
+    # the errors yourselves!
+    #
+    # Example code:
+    #   ret = @api.batch do |b|
+    #     b.auth_createToken
+    #     b.admin_getAppProperties :properties => ['application_name','callback_url']
+    #   end
+    def batch &block
+      @in_batch = true
+      block.call(self)
+      @in_batch = false
+
+      ret = self.batch_run :call_id => Time.now, :method_feed => @method_feed.to_json
+
+      @method_feed = []
+      
+      ret
     end
 
     def method_missing method, *args
       request = {}
 
       args[0].each do |k,v| 
-        request[k.to_s] = v.kind_of?(Array) ? v.to_json : v
+        request[k.to_s] = \
+          if v.kind_of?(Array) && @in_batch
+            # If we are in a batch should return a escaped string
+            # since we will be within an another array
+            CGI.escape(v.to_json)
+          elsif v.kind_of?(Array) && !@in_batch
+            v.to_json
+          elsif v.kind_of?(Time)
+            v.to_f
+          else
+            v
+          end
       end if args[0]
 
       request['api_key'] = @api_key
@@ -107,14 +137,20 @@ module ReFacebook
 
       request['sig'] = generate_sig(request.sort)
 
+      if @in_batch
+        # If we are in a batch call just return the formatted request for method_feed
+        @method_feed << request.collect { |k,v| "#{k}=#{v}" }.join('&')
+        return
+      end
+
       req = Net::HTTP.post_form(URI.parse(APIRestServer), request)
       ret = JSON.parse("[#{req.body}]")[0]
 
-      if ret.class == Hash && ret.has_key?('error_code')
+      if ret.kind_of?(Hash) and ret.has_key?('error_code')
         raise APIError.new(ret), ret['error_msg']
       end
 
-      ret
+      return ret
     end
 
     private

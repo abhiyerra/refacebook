@@ -53,10 +53,16 @@ describe ReFacebook::API do
   end
 
   it "does a batch.run" do
-    # violated "not implemented yet"
-  end 
+    ret = @api.batch do |b|
+      b.auth_createToken
+      b.admin_getAppProperties :properties => ['application_name','callback_url']
+    end
 
-  it "creates a session" do
-    # violated "not implemented yet"
+    ret.length.should == 2
+
+    # TODO: Error in JSON.parse. Right now just check that application_name is availiable
+    app_properties = ret[1]
+    app_properties['application_name'].should == 'application_name'
+    app_properties['traytwo'].should == 'traytwo'
   end 
 end
