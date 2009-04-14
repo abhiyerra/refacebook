@@ -35,10 +35,8 @@ module Sinatra
     # [:api_key] Your application's Facebook API key.
     # [:secret_key] Your application's Facebook Secret key.
     # [:canvas_url] The full path to your canvas page.
-    # [:require_login] If this is set to true then the user is redirected to
-    # the login page where she needs to authenticate.
-    # [:store] This currently uses memcache-client as the session store since
-    # Rack doesn't currently have non cookie based session stores.
+    # [:require_login] If this is set to true then the user is redirected to the login page where she needs to authenticate.
+    # [:store] Currently uses memcache-client as the session store since Rack doesn't currently have non cookie based session stores.
     def require_facebook *args
       settings = args[0]
 
