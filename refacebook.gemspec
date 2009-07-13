@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{refacebook}
-  s.version = "0.4.8"
+  s.version = "0.4.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Abhi Yerra"]
@@ -43,17 +43,26 @@ Gem::Specification.new do |s|
     s.specification_version = 2
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<json-jruby>, [">= 1.1.3"])
-      s.add_runtime_dependency(%q<json>, [">= 1.1.4"])
+      begin
+        s.add_runtime_dependency(%q<json-jruby>, [">= 1.1.3"])
+      rescue
+        s.add_runtime_dependency(%q<json>, [">= 1.1.4"])
+      end
       s.add_runtime_dependency(%q<memcache-client>, [">= 1.7.1"])
     else
-      s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
-      s.add_dependency(%q<json>, [">= 1.1.4"])
+      begin
+        s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
+      rescue
+        s.add_dependency(%q<json>, [">= 1.1.4"])
+      end
       s.add_dependency(%q<memcache-client>, [">= 1.7.1"])
     end
   else
-    s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
-    s.add_dependency(%q<json>, [">= 1.1.4"])
+    begin
+      s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
+    rescue
+      s.add_dependency(%q<json>, [">= 1.1.4"])
+    end
     s.add_dependency(%q<memcache-client>, [">= 1.7.1"])
   end
 end
