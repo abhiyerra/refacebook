@@ -2,6 +2,7 @@ History.txt
 Manifest.txt
 README.txt
 Rakefile
-bin/blah
-lib/blah.rb
-test/test_blah.rb
+examples/example.rb
+lib/refacebook.rb
+lib/refacebook/sinatra.rb
+spec/api_spec.rb

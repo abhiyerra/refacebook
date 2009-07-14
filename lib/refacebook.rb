@@ -5,6 +5,8 @@ require 'cgi'
 require 'json'
 
 module ReFacebook
+  VERSION = "0.4.10"
+
   APIRestServer = "http://api.facebook.com/restserver.php"
   LoginUrl = "http://www.facebook.com/login.php"
 

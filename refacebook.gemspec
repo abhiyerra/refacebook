@@ -2,67 +2,33 @@
 
 Gem::Specification.new do |s|
   s.name = %q{refacebook}
-  s.version = "0.4.9"
+  s.version = "0.4.10"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Abhi Yerra"]
-  s.date = %q{2009-04-14}
-  s.default_executable = %q{refacebook}
+  s.authors = ["Kesava Abhinav Yerra"]
+  s.date = %q{2009-07-13}
   s.description = %q{ReFacebook is a facebook library and Sinatra extension.}
   s.email = %q{abhi@traytwo.com}
-  s.executables = ["refacebook"]
-  s.extra_rdoc_files = [
-    "README.txt"
-  ]
-  s.files = [
-    "History.txt",
-    "Manifest.txt",
-    "README.txt",
-    "Rakefile",
-    "VERSION.yml",
-    "bin/refacebook",
-    "examples/example.rb",
-    "lib/refacebook.rb",
-    "lib/refacebook/sinatra.rb",
-    "spec/api_spec.rb"
-  ]
-  s.has_rdoc = true
-  s.homepage = %q{http://github.com/abhiyerra/refacebook}
-  s.rdoc_options = ["--charset=UTF-8"]
+  s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.txt"]
+  s.files = ["History.txt", "Manifest.txt", "README.txt", "Rakefile", "examples/example.rb", "lib/refacebook.rb", "lib/refacebook/sinatra.rb", "spec/api_spec.rb"]
+  s.homepage = %q{http://refacebook.rubyforge.org}
+  s.rdoc_options = ["--main", "README.txt"]
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{refacebook}
-  s.rubygems_version = %q{1.3.1}
-  s.summary = %q{ReFacebook is a facebook library and Sinatra extension.}
-  s.test_files = [
-    "spec/api_spec.rb",
-    "examples/example.rb"
-  ]
+  s.rubygems_version = %q{1.3.3}
+  s.summary = %q{ReFacebook simplifies the creation of facebook apps with the use of Sinatra.}
+  s.test_files = ["spec/api_spec.rb"]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 2
+    s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      begin
-        s.add_runtime_dependency(%q<json-jruby>, [">= 1.1.3"])
-      rescue
-        s.add_runtime_dependency(%q<json>, [">= 1.1.4"])
-      end
-      s.add_runtime_dependency(%q<memcache-client>, [">= 1.7.1"])
+      s.add_development_dependency(%q<hoe>, [">= 2.3.2"])
     else
-      begin
-        s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
-      rescue
-        s.add_dependency(%q<json>, [">= 1.1.4"])
-      end
-      s.add_dependency(%q<memcache-client>, [">= 1.7.1"])
+      s.add_dependency(%q<hoe>, [">= 2.3.2"])
     end
   else
-    begin
-      s.add_dependency(%q<json-jruby>, [">= 1.1.3"])
-    rescue
-      s.add_dependency(%q<json>, [">= 1.1.4"])
-    end
-    s.add_dependency(%q<memcache-client>, [">= 1.7.1"])
+    s.add_dependency(%q<hoe>, [">= 2.3.2"])
   end
 end
