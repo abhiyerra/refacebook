@@ -9,8 +9,8 @@ module Sinatra
     end
 
     # Return a concatenated url with the canvas url and the path
-    def link_from_canvas(path="")
-      path = (path.empty? || path.eql?("/")) ? "" : "/#{path}"
+    def link_from_canvas(path="/")
+      path = path.eql?("/") ? "" : "/#{path}"
       "#{options.canvas_url}#{path}"
     end
 
@@ -51,13 +51,20 @@ module Sinatra
           request.env['REQUEST_METHOD'] = 'GET' 
         end
 
-        if params['fb_sig_session_key']
-          @fbsession = settings[:store].get(params['fb_sig_session_key'])
-          @fbsession = ReFacebook::Session.new(settings[:api_key], settings[:secret_key]) unless @fbsession
-          @fbsession.update_session_params(params)
 
-          expiry = @fbsession.expires.to_i - @fbsession.time.to_i
-          settings[:store].set(params['fb_sig_session_key'], @fbsession, expiry)
+        if params['fb_sig_session_key']
+          begin
+            @fbsession = settings[:store].get(params['fb_sig_session_key'])
+            @fbsession = ReFacebook::Session.new(settings[:api_key], settings[:secret_key]) unless @fbsession
+            @fbsession.update_session_params(params)
+
+            expiry = @fbsession.expires.to_i - @fbsession.time.to_i
+            settings[:store].set(params['fb_sig_session_key'], @fbsession, expiry)
+          rescue
+            # Say the store fails!
+            @fbsession = ReFacebook::Session.new(settings[:api_key], settings[:secret_key])
+            @fbsession.update_session_params(params)
+          end
         else
           # Just return a session, even if it's not a lasting session.
           @fbsession = ReFacebook::Session.new(settings[:api_key], settings[:secret_key])
